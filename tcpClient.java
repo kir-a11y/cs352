@@ -9,7 +9,7 @@ public class tcpClient{
 		int portnum = Integer.parseInt(args[0]);
 		BufferedReader inFromUser = new BufferedReader(
 			new InputStreamReader(System.in));
-		Socket clientSocket = new Socket("localhost", portnum);
+		Socket clientSocket = new Socket("127.0.0.1", portnum);
 		clientSocket.setSoTimeout(10000); //timeout
 		System.out.println("Connected, so timeout == 10000.");
 		DataOutputStream outToServer = new DataOutputStream(
@@ -24,25 +24,27 @@ public class tcpClient{
 			sentence = inFromUser.readLine();
 			sentence = sentence.toLowerCase();
 			if (sentence.equals("quit") || sentence.equals("q")) {
-				break;
+				outToServer.writeBytes("QUIT"+'\n');
 			}else if (sentence.equals("get") || sentence.equals("g")) {
 				System.out.println("Please indicate path you want to access:");
 				sentence = inFromUser.readLine();
-				outToServer.writeBytes("GET " + sentence + '\n');
+				outToServer.writeBytes("GET " + sentence+'\n');
 			}else if (sentence.equals("post") || sentence.equals("p")) {
 				System.out.println("Please indicate path you want to access:");
 				sentence = inFromUser.readLine();
-				outToServer.writeBytes("POST " + sentence + '\n');
+				outToServer.writeBytes("POST " + sentence+'\n');
 			}else if (sentence.equals("head") || sentence.equals("h")) {
 				System.out.println("Please indicate path you want to access:");
 				sentence = inFromUser.readLine();
-				outToServer.writeBytes("HEAD " + sentence + '\n');
+				outToServer.writeBytes("HEAD " + sentence+'\n');
 			}else {
 				System.out.println("Error: wrong mode, try again.");
 			}
-
-			modifiedSentence = inFromServer.readLine();
-		System.out.println("FROM SEVER: "+ modifiedSentence);
+			System.out.println();
+			modifiedSentence = inFromServer.readLine();System.out.println("FROM SEVER: "+ modifiedSentence);
+		if (modifiedSentence.equals("y")){
+			break;
+		}
 		}
 
 		clientSocket.close();
